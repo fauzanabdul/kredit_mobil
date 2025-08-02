@@ -91,6 +91,13 @@
             font-weight: 600;
             padding: 1rem 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header i {
+            margin-right: 10px;
+            font-size: 1.1rem;
         }
 
         .logout-btn {
@@ -111,6 +118,8 @@
             background-color: var(--primary);
             border-color: var(--primary);
             font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
         }
 
         .btn-primary:hover {
@@ -120,6 +129,8 @@
 
         .table {
             margin-bottom: 0;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .table th {
@@ -128,6 +139,9 @@
             font-weight: 600;
             border: none;
             padding: 15px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
         }
 
         .table td {
@@ -136,14 +150,34 @@
             border-color: rgba(0,0,0,0.05);
         }
 
+        .table tr:not(:last-child) td {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .table tr:hover td {
+            background-color: rgba(94, 116, 255, 0.03);
+        }
+
         .badge {
             font-size: 0.75rem;
             padding: 6px 12px;
+            border-radius: 50px;
         }
 
         .btn-sm {
             padding: 6px 12px;
             font-size: 0.875rem;
+            border-radius: 6px;
+        }
+
+        .btn-warning {
+            background-color: #FFC107;
+            border-color: #FFC107;
+        }
+
+        .btn-danger {
+            background-color: #DC3545;
+            border-color: #DC3545;
         }
 
         .car-image {
@@ -151,15 +185,63 @@
             height: 60px;
             object-fit: cover;
             border-radius: 8px;
-            border: 2px solid #e9ecef;
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
         .search-box {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: var(--card-shadow);
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .search-box .form-control {
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 10px 15px;
+        }
+
+        .search-box .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(94, 116, 255, 0.25);
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title i {
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+
+        .page-title h2 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .no-data {
+            padding: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 8px 16px;
         }
 
         .price-format {
@@ -170,309 +252,102 @@
 </head>
 <body>
 
-
-
 <div class="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-car"></i> Data Mobil</h2>
-        <div>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#tambahMobilModal">
-                <i class="fas fa-plus"></i> Tambah Mobil
-            </button>
-            <a href="{{ route('pendataan') }}" class="btn btn-secondary mt-3">
-    <i class="fas fa-arrow-left"></i> Kembali ke Pendataan
-</a>
+        <div class="page-title">
+            <i class="fas fa-car"></i>
+            <h2>Data Mobil</h2>
         </div>
+        <a href="{{ route('mobil.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Mobil
+        </a>
     </div>
+    
+    <a href="{{ route('pendataan') }}" class="btn btn-secondary back-btn">
+        <i class="fas fa-arrow-left"></i> Kembali ke Pendataan
+    </a>
 
     <div class="search-box">
         <div class="row">
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Cari mobil..." id="searchInput">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Cari mobil..." id="searchInput">
+                </div>
             </div>
             <div class="col-md-3">
                 <select class="form-select" id="filterMerek">
                     <option value="">Semua Merek</option>
-                    <option value="toyota">Toyota</option>
-                    <option value="honda">Honda</option>
-                    <option value="mitsubishi">Mitsubishi</option>
-                    <option value="nissan">Nissan</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filterStatus">
-                    <option value="">Semua Status</option>
-                    <option value="tersedia">Tersedia</option>
-                    <option value="terjual">Terjual</option>
-                    <option value="booking">Booking</option>
+                    @foreach($mereks as $merek)
+                        <option value="{{ $merek->id }}">{{ $merek->nama_merek }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
     </div>
-
+    
     <div class="card">
         <div class="card-header">
-            <i class="fas fa-car" style="color: var(--primary);"></i> Daftar Unit Mobil
+            <i class="fas fa-list"></i> Daftar Mobil
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th width="60px">No</th>
                             <th>Foto</th>
-                            <th>Merek/Model</th>
+                            <th>Nama Mobil</th>
+                            <th>Merek</th>
                             <th>Tahun</th>
                             <th>Warna</th>
                             <th>Harga</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th width="180px">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="mobilTableBody">
+                        @forelse ($mobils as $index => $mobil)
                         <tr>
-                            <td>1</td>
-                            <td><img src="https://via.placeholder.com/80x60/007bff/ffffff?text=Car" alt="Avanza" class="car-image"></td>
+                            <td>{{ $index + 1 }}</td>
                             <td>
-                                <strong>Toyota Avanza</strong><br>
-                                <small class="text-muted">1.3 G MT</small>
+                                @if($mobil->foto)
+                                    <img src="{{ asset('storage/' . $mobil->foto) }}" class="car-image" alt="{{ $mobil->model }}">
+                                @else
+                                    <div class="car-image bg-light d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-car text-muted"></i>
+                                    </div>
+                                @endif
                             </td>
-                            <td>2023</td>
-                            <td>Putih</td>
-                            <td class="price-format">Rp 235.000.000</td>
-                            <td><span class="badge bg-success">Tersedia</span></td>
+                            <td>{{ $mobil->merek->nama_merek ?? '-' }}</td>
+                            <td>{{ $mobil->model }}</td>
+                            <td>{{ $mobil->tahun }}</td>
+                            <td>{{ $mobil->warna }}</td>
+                            <td class="price-format">Rp {{ number_format($mobil->harga, 0, ',', '.') }}</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <div class="action-buttons">
+                                    <a href="{{ route('mobil.edit', $mobil->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('mobil.destroy', $mobil->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menghapus mobil ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><img src="https://via.placeholder.com/80x60/dc3545/ffffff?text=Car" alt="Brio" class="car-image"></td>
-                            <td>
-                                <strong>Honda Brio</strong><br>
-                                <small class="text-muted">1.2 S CVT</small>
-                            </td>
-                            <td>2022</td>
-                            <td>Merah</td>
-                            <td class="price-format">Rp 185.000.000</td>
-                            <td><span class="badge bg-warning">Booking</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                        @empty
+                        <tr id="noDataRow">
+                            <td colspan="8" class="no-data">
+                                <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 10px;"></i><br>
+                                Tidak ada data mobil
                             </td>
                         </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><img src="https://via.placeholder.com/80x60/28a745/ffffff?text=Car" alt="Xpander" class="car-image"></td>
-                            <td>
-                                <strong>Mitsubishi Xpander</strong><br>
-                                <small class="text-muted">1.5 Ultimate AT</small>
-                            </td>
-                            <td>2023</td>
-                            <td>Silver</td>
-                            <td class="price-format">Rp 285.000.000</td>
-                            <td><span class="badge bg-success">Tersedia</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td><img src="https://via.placeholder.com/80x60/ffc107/000000?text=Car" alt="Livina" class="car-image"></td>
-                            <td>
-                                <strong>Nissan Livina</strong><br>
-                                <small class="text-muted">1.5 VL CVT</small>
-                            </td>
-                            <td>2022</td>
-                            <td>Hitam</td>
-                            <td class="price-format">Rp 225.000.000</td>
-                            <td><span class="badge bg-danger">Terjual</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td><img src="https://via.placeholder.com/80x60/6f42c1/ffffff?text=Car" alt="Rush" class="car-image"></td>
-                            <td>
-                                <strong>Toyota Rush</strong><br>
-                                <small class="text-muted">1.5 TRD AT</small>
-                            </td>
-                            <td>2023</td>
-                            <td>Abu-abu</td>
-                            <td class="price-format">Rp 275.000.000</td>
-                            <td><span class="badge bg-success">Tersedia</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td><img src="https://via.placeholder.com/80x60/17a2b8/ffffff?text=Car" alt="Jazz" class="car-image"></td>
-                            <td>
-                                <strong>Honda Jazz</strong><br>
-                                <small class="text-muted">1.5 RS CVT</small>
-                            </td>
-                            <td>2022</td>
-                            <td>Biru</td>
-                            <td class="price-format">Rp 295.000.000</td>
-                            <td><span class="badge bg-success">Tersedia</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info me-1" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="row mt-4">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-car fa-2x text-success mb-2"></i>
-                    <h6>Total Unit</h6>
-                    <h4 class="text-success">6</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-dollar-sign fa-2x text-info mb-2"></i>
-                    <h6>Terjual</h6>
-                    <h4 class="text-info">1</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Tambah Mobil -->
-<div class="modal fade" id="tambahMobilModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus"></i> Tambah Unit Mobil</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Merek</label>
-                                <select class="form-select">
-                                    <option value="">Pilih Merek</option>
-                                    <option value="toyota">Toyota</option>
-                                    <option value="honda">Honda</option>
-                                    <option value="mitsubishi">Mitsubishi</option>
-                                    <option value="nissan">Nissan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Model</label>
-                                <input type="text" class="form-control" placeholder="Masukkan model mobil">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Tahun</label>
-                                <select class="form-select">
-                                    <option value="2024">2024</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2022">2022</option>
-                                    <option value="2021">2021</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Warna</label>
-                                <input type="text" class="form-control" placeholder="Warna mobil">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Status</label>
-                                <select class="form-select">
-                                    <option value="tersedia">Tersedia</option>
-                                    <option value="booking">Booking</option>
-                                    <option value="terjual">Terjual</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Harga</label>
-                        <input type="number" class="form-control" placeholder="Masukkan harga">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Foto Mobil</label>
-                        <input type="file" class="form-control" accept="image/*">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea class="form-control" rows="3" placeholder="Deskripsi tambahan"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary">Simpan</button>
             </div>
         </div>
     </div>
@@ -480,47 +355,74 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('keyup', function() {
+    document.getElementById('searchInput').addEventListener('keyup', function () {
         const searchTerm = this.value.toLowerCase();
-        const tableRows = document.querySelectorAll('tbody tr');
-        
+        const tableRows = document.querySelectorAll('#mobilTableBody tr:not(#noDataRow)');
+        let visibleCount = 0;
+
         tableRows.forEach(row => {
-            const carName = row.cells[2].textContent.toLowerCase();
-            const color = row.cells[4].textContent.toLowerCase();
+            const merek = row.cells[2]?.textContent.toLowerCase();
+            const model = row.cells[3]?.textContent.toLowerCase();
+            const tahun = row.cells[4]?.textContent.toLowerCase();
+            const warna = row.cells[5]?.textContent.toLowerCase();
+            const harga = row.cells[6]?.textContent.toLowerCase();
             
-            if (carName.includes(searchTerm) || color.includes(searchTerm)) {
+            if (merek.includes(searchTerm) || 
+                model.includes(searchTerm) || 
+                tahun.includes(searchTerm) || 
+                warna.includes(searchTerm) ||
+                harga.includes(searchTerm)) {
                 row.style.display = '';
+                visibleCount++;
             } else {
                 row.style.display = 'none';
             }
         });
+
+        // Tampilkan pesan jika tidak ada baris yang cocok
+        const noDataRow = document.getElementById('noDataRow');
+        if (noDataRow) {
+            noDataRow.style.display = visibleCount === 0 ? '' : 'none';
+            
+            if (visibleCount === 0 && searchTerm !== '') {
+                noDataRow.querySelector('td').innerHTML = `
+                    <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 10px;"></i><br>
+                    Tidak ditemukan mobil yang sesuai dengan pencarian
+                `;
+            } else if (visibleCount === 0) {
+                noDataRow.querySelector('td').innerHTML = `
+                    <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 10px;"></i><br>
+                    Tidak ada data mobil
+                `;
+            }
+        }
     });
 
     // Filter by brand
     document.getElementById('filterMerek').addEventListener('change', function() {
-        const filterValue = this.value.toLowerCase();
-        const tableRows = document.querySelectorAll('tbody tr');
+        const filterValue = this.value;
+        const tableRows = document.querySelectorAll('#mobilTableBody tr:not(#noDataRow)');
         
         tableRows.forEach(row => {
-            const carName = row.cells[2].textContent.toLowerCase();
+            const merekId = row.cells[2].textContent.toLowerCase();
             
-            if (filterValue === '' || carName.includes(filterValue)) {
+            if (filterValue === '' || 
+                (this.options[this.selectedIndex].text.toLowerCase() === merekId)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
             }
         });
+        updateNoDataRow();
     });
 
-    // Filter by status
+    // Filter by status (jika ada kolom status)
     document.getElementById('filterStatus').addEventListener('change', function() {
         const filterValue = this.value.toLowerCase();
-        const tableRows = document.querySelectorAll('tbody tr');
+        const tableRows = document.querySelectorAll('#mobilTableBody tr:not(#noDataRow)');
         
         tableRows.forEach(row => {
-            const statusBadge = row.cells[6].querySelector('.badge');
-            const status = statusBadge.textContent.toLowerCase();
+            const status = row.cells[7]?.textContent.toLowerCase() || '';
             
             if (filterValue === '' || status.includes(filterValue)) {
                 row.style.display = '';
@@ -528,8 +430,33 @@
                 row.style.display = 'none';
             }
         });
+        updateNoDataRow();
     });
-</script>
 
+    function updateNoDataRow() {
+        const visibleRows = document.querySelectorAll('#mobilTableBody tr:not(#noDataRow)[style=""]');
+        const noDataRow = document.getElementById('noDataRow');
+        
+        if (noDataRow) {
+            noDataRow.style.display = visibleRows.length === 0 ? '' : 'none';
+            
+            if (visibleRows.length === 0) {
+                const merekFilter = document.getElementById('filterMerek').value;
+                const statusFilter = document.getElementById('filterStatus').value;
+                
+                let message = 'Tidak ada data mobil';
+                
+                if (merekFilter || statusFilter) {
+                    message = 'Tidak ditemukan mobil dengan filter yang dipilih';
+                }
+                
+                noDataRow.querySelector('td').innerHTML = `
+                    <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 10px;"></i><br>
+                    ${message}
+                `;
+            }
+        }
+    }
+</script>
 </body>
 </html>

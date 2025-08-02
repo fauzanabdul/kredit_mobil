@@ -11,7 +11,7 @@ class MerekController extends Controller
     public function index()
     {
         $mereks = Merek::all();
-        return view('merek.index', compact('mereks')); // Sesuaikan dengan nama file blade
+        return view('merek.index', compact('mereks'));
     }
 
     // Menampilkan form tambah merek
@@ -24,13 +24,11 @@ class MerekController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:100',
-
+            'nama_merek' => 'required|string|max:100',
         ]);
 
         Merek::create([
-            'nama' => $request->nama,
-
+            'nama_merek' => $request->nama_merek
         ]);
 
         return redirect()->route('merek.index')->with('success', 'Merek berhasil ditambahkan!');
@@ -47,14 +45,12 @@ class MerekController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:100',
-
+            'nama_merek' => 'required|string|max:100',
         ]);
 
         $merek = Merek::findOrFail($id);
         $merek->update([
-            'nama' => $request->nama,
-
+            'nama_merek' => $request->nama_merek
         ]);
 
         return redirect()->route('merek.index')->with('success', 'Merek berhasil diperbarui!');

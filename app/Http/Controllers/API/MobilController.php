@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class MobilController extends Controller
 {
-    // GET: Semua mobil
     public function index()
     {
         $mobils = Mobil::with('merek')->get();
@@ -19,11 +17,11 @@ class MobilController extends Controller
         ], 200);
     }
 
-    // POST: Tambah mobil baru
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'nama_mobil' => 'required|string|max:255',
+            'tipe' => 'required|string',
             'tahun' => 'required|digits:4|integer',
             'warna' => 'required|string',
             'harga' => 'required|numeric',
@@ -46,7 +44,6 @@ class MobilController extends Controller
         ], 201);
     }
 
-    // GET: Detail mobil
     public function show($id)
     {
         $mobil = Mobil::with('merek')->find($id);
@@ -64,7 +61,6 @@ class MobilController extends Controller
         ], 200);
     }
 
-    // PUT: Update mobil
     public function update(Request $request, $id)
     {
         $mobil = Mobil::find($id);
@@ -77,7 +73,8 @@ class MobilController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'nama' => 'sometimes|required|string|max:255',
+            'nama_mobil' => 'sometimes|required|string|max:255',
+            'tipe' => 'sometimes|required|string',
             'tahun' => 'sometimes|required|digits:4|integer',
             'warna' => 'sometimes|required|string',
             'harga' => 'sometimes|required|numeric',
@@ -100,7 +97,6 @@ class MobilController extends Controller
         ], 200);
     }
 
-    // DELETE: Hapus mobil
     public function destroy($id)
     {
         $mobil = Mobil::find($id);

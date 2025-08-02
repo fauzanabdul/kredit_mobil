@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +8,7 @@ class Mobil extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama', 'tahun', 'warna', 'harga', 'merek_id'];
+    protected $fillable = ['nama_mobil', 'tahun', 'warna', 'harga', 'merek_id'];
 
     public function merek()
     {

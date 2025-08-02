@@ -9,7 +9,7 @@ class Merek extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama'];
+    protected $fillable = ['nama_merek'];
 
     public function mobils()
     {

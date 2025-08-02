@@ -32,7 +32,7 @@
 <div class="container mt-5">
     <div class="form-container">
         <a href="{{ route('pengguna') }}" class="btn btn-outline-secondary mb-4">
-            <i class="fas fa-arrow-left me-2"></i> Kembali ke Pendataan
+            <i class="fas fa-arrow-left me-2"></i> Kembali ke Pengguna
         </a>
 
         <div class="card">

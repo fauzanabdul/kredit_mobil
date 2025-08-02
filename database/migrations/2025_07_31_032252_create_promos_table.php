@@ -4,19 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePromosTable extends Migration
 {
     public function up()
     {
-        Schema::create('mereks', function (Blueprint $table) {
+        Schema::create('promos', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_merek');
+            $table->string('nama'); // contoh: Potongan DP, Bunga 0%, dll
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('mereks');
+        Schema::dropIfExists('promos');
     }
-};
+}

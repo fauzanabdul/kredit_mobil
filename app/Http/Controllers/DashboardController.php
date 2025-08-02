@@ -2,20 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Mobil;
+use App\Models\Merek;
+use App\Models\Pembayaran;
+use App\Models\Promo;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    /**
-     * Tampilkan halaman dashboard.
-     */
     public function index()
     {
-        // Hitung total user dengan role 'pengguna'
-        $jumlahPengguna = User::where('role', 'pengguna')->count();
+        // Hitung jumlah data dari masing-masing tabel
+        $userCount = User::count();
+        $mobilCount = Mobil::count();
+        $merekCount = Merek::count();
+        $paymentCount = Pembayaran::count();
+        $promoCount = Promo::count();
 
-        // Kirim data ke tampilan
-        return view('dashboard', compact('jumlahPengguna'));
+        // Kirim semua data ke view dashboard
+        return view('dashboard', [
+            'userCount' => $userCount,
+            'mobilCount' => $mobilCount,
+            'merekCount' => $merekCount,
+            'paymentCount' => $paymentCount,
+            'promoCount' => $promoCount,
+        ]);
     }
 }

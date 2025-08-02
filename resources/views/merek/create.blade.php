@@ -72,26 +72,23 @@
                 <h3 class="m-0">Tambah Merek Mobil</h3>
             </div>
             
-            <form action="{{ route('merek.store') }}" method="POST">
-                @csrf
+         <form method="POST" action="{{ route('merek.store') }}">
+    @csrf
+    <div class="form-group">
+        <label for="nama_merek">Nama Merek</label>
+        <input type="text" 
+               class="form-control" 
+               id="nama_merek" 
+               name="nama_merek" 
+               required
+               value="{{ old('nama_merek') }}">
+        @error('nama_merek')
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <button type="submit" class="btn btn-primary">Simpan</button>
+</form>
 
-                <div class="mb-4">
-                    <label for="nama" class="form-label">Nama Merek <span class="text-danger">*</span></label>
-                    <input type="text" name="nama id="nama" class="form-control" 
-                           placeholder="Masukan Nama Merek" required>
-                </div>
-
-               
-
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <a href="{{ route('merek.index') }}" class="btn btn-secondary btn-action">
-                        <i class="fas fa-arrow-left"></i> Kembali
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-action">
-                        <i class="fas fa-save"></i> Simpan Data
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 

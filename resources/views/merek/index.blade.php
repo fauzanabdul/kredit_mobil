@@ -292,7 +292,7 @@
                         @forelse ($mereks as $index => $merek)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $merek->nama }}</td>
+                            <td>{{ $merek->nama_merek }}</td>     
                             <td>
                                 <div class="action-buttons">
                                     <a href="{{ route('merek.edit', $merek->id) }}" class="btn btn-sm btn-warning">

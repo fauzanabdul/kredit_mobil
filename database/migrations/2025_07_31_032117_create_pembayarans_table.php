@@ -4,19 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePembayaransTable extends Migration
 {
     public function up()
     {
-        Schema::create('mereks', function (Blueprint $table) {
+        Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_merek');
+            $table->string('metode'); // contoh: Gopay, Dana, Indomaret, dll
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('mereks');
+        Schema::dropIfExists('pembayarans');
     }
-};
+}

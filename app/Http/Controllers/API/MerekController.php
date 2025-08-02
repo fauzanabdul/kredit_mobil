@@ -22,27 +22,27 @@ class MerekController extends Controller
     }
 
     // POST /api/merek
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255'
-        ]);
+   public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'nama_merek' => 'required|string|max:255'
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $merek = Merek::create([
-            'nama' => $request->nama
-        ]);
-
+    if ($validator->fails()) {
         return response()->json([
-            'success' => true,
-            'message' => 'Merek berhasil ditambahkan',
-            'data' => $merek
-        ], 201);
+            'success' => false,
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    $merek = Merek::create([
+        'nama_merek' => $request->nama_merek // Perbaikan di sini (dari 'nama' ke 'nama_merek')
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Merek berhasil ditambahkan',
+        'data' => $merek
+    ], 201);
+}
 }

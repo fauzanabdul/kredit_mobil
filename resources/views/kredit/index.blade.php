@@ -26,51 +26,6 @@
             color: var(--text-dark);
         }
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: white;
-            position: fixed;
-            height: 100vh;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.05);
-            border-right: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .sidebar-header {
-            padding: 1.5rem;
-            text-align: center;
-            background-color: var(--primary);
-        }
-
-        .sidebar-header h4 {
-            color: white;
-            margin: 0;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .sidebar a {
-            color: var(--text-medium);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            font-weight: 500;
-        }
-
-        .sidebar a i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: var(--primary-light);
-            color: var(--primary);
-            border-left: 3px solid var(--primary);
-        }
-
         .content {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -91,20 +46,6 @@
             font-weight: 600;
             padding: 1rem 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .logout-btn {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding: 15px 20px;
-            color: var(--text-medium);
-        }
-
-        .logout-btn:hover {
-            background-color: rgba(255, 107, 107, 0.1);
-            color: #ff6b6b;
         }
 
         .btn-primary {
@@ -136,11 +77,6 @@
             border-color: rgba(0,0,0,0.05);
         }
 
-        .badge {
-            font-size: 0.75rem;
-            padding: 6px 12px;
-        }
-
         .btn-sm {
             padding: 6px 12px;
             font-size: 0.875rem;
@@ -148,8 +84,6 @@
     </style>
 </head>
 <body>
-
-
 
 <div class="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -161,10 +95,13 @@
         </div>
     </div>
 
-    <!-- Tambahkan tombol di sini -->
     <a href="{{ route('pendataan') }}" class="btn btn-secondary mb-4">
         <i class="fas fa-arrow-left"></i> Kembali ke Pendataan
     </a>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
     <div class="card">
         <div class="card-header">
@@ -181,34 +118,63 @@
                             <th>Bunga</th>
                             <th>Pembayaran</th>
                             <th>DP Minimum</th>
+                            <th>Promo</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($kredits as $index => $kredit)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $kredit->nama_mobil }}</td>
+                            <td>{{ $kredit->tenor }} bulan</td>
+                            <td>{{ $kredit->bunga }}%</td>
+                            <td>{{ $kredit->metode_pembayaran }}</td>
+                            <td>{{ $kredit->dp_minimum }}%</td>
+                            <td>{{ $kredit->promo ?? '-' }}</td>
+                            <td class="d-flex gap-2">
+                                <a href="{{ route('kredit.edit', $kredit->id) }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="{{ route('kredit.destroy', $kredit->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center">Belum ada data kredit</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-<!-- Modal Tambah Paket Kredit -->
-<div class="modal fade" id="tambahKreditModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-plus"></i> Tambah Paket Kredit</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Nama Mobil</label>
-                        <input type="text" class="form-control" placeholder="Masukkan nama paket">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
+
+    <!-- Modal Tambah Paket Kredit -->
+    <div class="modal fade" id="tambahKreditModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus"></i> Tambah Paket Kredit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('kredit.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Nama Mobil</label>
+                            <input type="text" name="nama_mobil" class="form-control" placeholder="Masukkan nama mobil" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Tenor (bulan)</label>
-                                <select class="form-select">
+                                <select name="tenor" class="form-select" required>
                                     <option value="12">12 bulan</option>
                                     <option value="24">24 bulan</option>
                                     <option value="36">36 bulan</option>
@@ -216,32 +182,40 @@
                                     <option value="60">60 bulan</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Bunga (%)</label>
-                                <input type="number" class="form-control" step="0.1" placeholder="0.0">
+                                <input type="number" name="bunga" step="0.1" class="form-control" placeholder="0.0" required>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">DP Minimum (%)</label>
-                        <input type="number" class="form-control" placeholder="0">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Metode Pembayaran</label>
-                        <select class="form-select">
-                            <option value="aktif">Gopay</option>
-                            <option value="nonaktif">Dana</option>
-                            <option value="nonaktif">Indomaret</option>
-                            <option value="nonaktif">Alfamart</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary">Simpan</button>
+                        <div class="mb-3">
+                            <label class="form-label">DP Minimum (%)</label>
+                            <input type="number" name="dp_minimum" class="form-control" placeholder="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Metode Pembayaran</label>
+                            <select name="metode_pembayaran" class="form-select" required>
+                                <option value="BRI">BRI</option>
+                                <option value="BCA">BCA</option>
+                                <option value="Mandiri">Mandiri</option>
+                                <option value="BSI">BSI</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kode Promo</label>
+                            <select name="promo" class="form-select">
+                                <option value="">- Tidak Ada Kode Promo -</option>
+                                <option value="potongan-dp">Potongan DP</option>
+                                <option value="bunga-nol">Bunga 0%</option>
+                                <option value="cicilan-ringan">Cicilan Ringan</option>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

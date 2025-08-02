@@ -10,13 +10,16 @@ return new class extends Migration
 {
     Schema::create('mobils', function (Blueprint $table) {
         $table->id();
-        $table->string('nama');
+        $table->string('nama_mobil');;
+        $table->string('foto')->nullable();
         $table->year('tahun');
         $table->string('warna');
         $table->integer('harga');
-        $table->unsignedBigInteger('merek_id');
-        $table->foreignId('merek_id')->constrained()->onDelete('cascade');
+        $table->unsignedBigInteger('merek_id'); // hanya satu kali
         $table->timestamps();
+
+        // Tambahkan foreign key jika diperlukan
+        $table->foreign('merek_id')->references('id')->on('mereks')->onDelete('cascade');
     });
 }
 
@@ -26,3 +29,5 @@ return new class extends Migration
         Schema::dropIfExists('mobils');
     }
 };
+
+
